@@ -1,0 +1,30 @@
+SetupP1:
+	mov.b	#0x01,&P1DIR	;   P1.0 como output
+	mov.b	#0x00,&P2DIR	;   P2.1 como input
+	mov.b	#0x02,&P2REN	;   set pull up para o botao
+	mov.b	#0x02,&P1OUT	;   levanta o pullup
+
+SetupP2:
+	mov.b	#0x80,&P4DIR	;   P4.7 como output
+	mov.b	#0x01,&P1DIR	;   P1.1 como input
+				;mantem P1.0 como output
+	mov.b	#0x01,&P1REN	;   set pull up para o botao
+	mov.b	#0x80,&P4OUT	;   levanta o pullup
+
+Chaves:	bit.b	#0x02,&P2IN	;   confere se apertou s1
+	jz	apertou_led1	;
+	bit.b	#0x02,&P1IN	;   confere se apertou s2
+	jz	apertou_led2	;
+				;   caso nenhum botao seja
+	mov.b	#0x00,&P1OUT	;apertado, apaga ambos
+	mov.b	#0x00,&P4OUT	;
+	jmp	chaves		; retorna ao loop.
+
+apertou_led1:
+	bis.b	#0x03,&P1OUT	;   toogle led p1.0
+	jmp	chaves		;
+apertou_led2:
+	bis.b	#0xA0,&P4OUT	;   toogle led p4.7
+	jmp	chaves		;
+	
+	
