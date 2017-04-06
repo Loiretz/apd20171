@@ -1,0 +1,15 @@
+DELAY	.equ	50000		; clock maquina (1Mhz por default)
+				; freq = clock/delay
+
+PISCA:
+	mov.b	#0x01,P1DIR	; indica que o bit .0 sera de saida
+	mov.b	#0x01,P1OUT	; liga o led1
+
+T500ms:				;
+	mov.w	#DELAY,R5	;
+return:	dec	R5		; inicio do laco
+	jnz	return		;
+				; fim do laco
+	xor.b	#0x01,P1OUT	; toogle do led1	
+
+	
