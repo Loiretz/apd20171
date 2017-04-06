@@ -1,0 +1,45 @@
+SETUP:	
+	mov.b	#0x01,&P1DIR	; P1.0 output (led1)
+				; P1.1 input (sw2)
+	mov.b	#0x01,&P1REN	; set pull up para P1
+	mov.b	#0x80,&P4DIR	; P4.7 output (led2)
+
+	mov.b	#0x00,R5	; contador
+	mov.b	#0x00,&P1OUT	; desliga led1
+	mov.b	#0x00,&P4OUT	; desliga led2
+
+LOOP:	
+	bit.b	#0x02,&P1IN	;
+	jz	CONTA		;
+	jmp	LOOP		;
+	ret			;
+
+CONTA:
+	inc	R5		;
+	bit.b	#0x03,R5	;
+	jz	NEXT_ZERO	;
+	bit	#0x01,R5	;
+	jz	NEXT_DOIS	;
+	bit	#0x02,R5	;
+	jz	NEXT_TRES	;
+	bis.b	#0x80,&P4OUT	; caso esteja no estado 0
+				;apenas inverte o bit 0.
+
+NEXT_ZERO:
+
+NEXT_DOIS:
+
+NEXT_TRES:
+	
+
+; as rotinas wait tem como unico objetivo gerar um
+;periodo em que sera visivel a mudanca de estado.
+WAIT1:	
+	mov.b	#0xFFFF,R7	;
+	dec	R7		;
+	jnz	WAIT1		;
+WAIT2:	
+	mov.b	#0xFFFF,R7	;
+	dec	R7		;
+	jnz	WAIT2		;
+	jmp	LOOP		;
